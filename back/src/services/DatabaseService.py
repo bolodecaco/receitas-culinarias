@@ -21,7 +21,8 @@ class DatabaseService:
                     description TEXT,
                     servings TEXT NOT NULL,
                     preparation_method TEXT NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    image TEXT DEFAULT NULL
                 )
             ''')
             conn.commit()
@@ -62,7 +63,39 @@ class DatabaseService:
                     'description': row[5],
                     'servings': row[6],
                     'preparation_method': json.loads(row[7]),
-                    'created_at': row[8]
+                    'created_at': row[8],
+                    'image': row[9] if row[9] else None
                 }
                 recipes.append(recipe)
             return recipes
+        
+    def get_recipe(self, recipe_id):
+        with sqlite3.connect(str(self.db_path)) as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM recipes WHERE id = ?', (recipe_id,))
+            row = cursor.fetchone()
+            if row:
+                return {
+                    'id': row[0],
+                    'name': row[1],
+                    'ingredients': json.loads(row[2]),
+                    'duration': row[3],
+                    'difficulty': row[4],
+                    'description': row[5],
+                    'servings': row[6],
+                    'preparation_method': json.loads(row[7]),
+                    'created_at': row[8],
+                    'image': row[9] if row[9] else None
+                }
+            return None
+        
+    def add_image(self, recipe_id, image_url):
+        with sqlite3.connect(str(self.db_path)) as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM recipes WHERE id = ?', (recipe_id,))
+            row = cursor.fetchone()
+            if not row:
+                return None
+            cursor.execute('UPDATE recipes SET image = ? WHERE id = ?', (image_url, recipe_id))
+            conn.commit()
+            return self.get_recipe(recipe_id)

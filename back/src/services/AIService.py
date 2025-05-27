@@ -27,3 +27,16 @@ class AIService:
             except json.JSONDecodeError:
                 raise ValueError("Erro ao decodificar JSON da resposta.")
         raise ValueError("Nenhum JSON válido encontrado na resposta.")
+    
+    def get_recipe(self, recipe_id):
+        recipe = self.db_service.get_recipe(recipe_id)
+        if not recipe:
+            raise ValueError("Receita não encontrada.")
+        return recipe
+    
+    def add_image(self, recipe_id, image_url):
+        recipe = self.db_service.add_image(recipe_id, image_url)
+        if not recipe:
+            raise ValueError("Receita não encontrada.")
+        return recipe
+        
