@@ -11,6 +11,7 @@ import { use, useEffect, useState } from "react";
 import { FiltersProps } from "@/types/FiltersProps";
 import { RecipeProps } from "@/types/RecipeProps";
 import { Footer } from "@/components/footer";
+import { AIAssistant } from "@/components/ai-assistant";
 
 export default function Home() {
   const [filters, setFilters] = useState<FiltersProps>({ category: "all" });
@@ -102,7 +103,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+      <AIAssistant />
       <Footer />
     </div>
   );
