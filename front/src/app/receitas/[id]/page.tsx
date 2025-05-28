@@ -45,7 +45,7 @@ export default function RecipePage() {
             <>
               <div className="relative h-[300px] md:h-[400px]">
                 <img
-                  src={recipe.image || "/placeholder.svg"}
+                  src={recipe.image}
                   alt={recipe.name}
                   className="w-full h-full object-cover"
                 />

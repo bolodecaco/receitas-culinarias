@@ -26,7 +26,7 @@ export function RecipeCard({
       <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
         <div className="aspect-video relative overflow-hidden">
           <img
-            src={image || "/placeholder.svg"}
+            src={image}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           />

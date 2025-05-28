@@ -67,9 +67,7 @@ export default function Home() {
                   description={recipe.description}
                   time={recipe.duration}
                   difficulty={recipe.difficulty}
-                  image={
-                    recipe.image || "/placeholder.svg?height=300&width=400"
-                  }
+                  image={recipe.image}
                   id={recipe.id}
                 />
               ))

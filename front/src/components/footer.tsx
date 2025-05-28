@@ -41,19 +41,13 @@ export function Footer() {
             <h3 className="text-xl font-bold mb-4">Siga-nos</h3>
             <div className="flex gap-4">
               <Link href="#" className="text-amber-200 hover:text-white">
-                Instagram
-              </Link>
-              <Link href="#" className="text-amber-200 hover:text-white">
-                Facebook
-              </Link>
-              <Link href="#" className="text-amber-200 hover:text-white">
-                Pinterest
+                Rede social fictícia 1
               </Link>
             </div>
           </div>
         </div>
         <div className="border-t border-amber-800 mt-8 pt-6 text-center text-amber-300">
-          <p>&copy; 2024 Sabores da Cozinha. Todos os direitos reservados.</p>
+          <p>&copy; 2025 Sabores da Cozinha. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>
