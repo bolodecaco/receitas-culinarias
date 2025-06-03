@@ -1,24 +1,27 @@
 "use client";
 
-import { Search } from "lucide-react";
-import Link from "next/link";
+import { AIAssistant } from "@/components/ai-assistant";
+import { FilterCategories } from "@/components/filter-categories";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import { RecipeCard } from "@/components/recipe-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { RecipeCard } from "@/components/recipe-card";
-import { Header } from "@/components/header";
-import { FilterCategories } from "@/components/filter-categories";
-import { use, useEffect, useState } from "react";
 import { FiltersProps } from "@/types/FiltersProps";
 import { RecipeProps } from "@/types/RecipeProps";
-import { Footer } from "@/components/footer";
-import { AIAssistant } from "@/components/ai-assistant";
+import { Search } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [filters, setFilters] = useState<FiltersProps>({ category: "all" });
   const [recipes, setRecipes] = useState<RecipeProps[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/recipes/")
+    const url =
+      filters.category === "all"
+        ? "http://localhost:5001/api/recipes/"
+        : `http://localhost:5001/api/recipes/?category=${filters.category}`;
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
         setRecipes(data);
@@ -26,7 +29,9 @@ export default function Home() {
       .catch((error) => {
         console.error("Erro ao buscar receitas:", error);
       });
-  }, []);
+  }, [filters]);
+
+  const filteredRecipes = recipes;
 
   return (
     <div className="min-h-screen bg-[#fffaf5]">
@@ -50,7 +55,7 @@ export default function Home() {
         </div>
       </section>
       <section className="py-8 px-4">
-        <FilterCategories setFilters={setFilters} />
+        <FilterCategories setFilters={setFilters} selected={filters.category} />
       </section>
 
       <section className="py-8 px-4">
@@ -59,8 +64,8 @@ export default function Home() {
             Receitas Populares
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recipes.length ? (
-              recipes.map((recipe) => (
+            {filteredRecipes.length ? (
+              filteredRecipes.map((recipe) => (
                 <RecipeCard
                   key={recipe.id}
                   title={recipe.name}

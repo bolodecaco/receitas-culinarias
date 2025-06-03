@@ -9,4 +9,5 @@ export interface RecipeProps {
   preparation_method: string[];
   servings: string;
   image: string;
+  category?: string;
 }

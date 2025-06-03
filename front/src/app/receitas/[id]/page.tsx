@@ -1,14 +1,13 @@
 "use client";
 
-import { ArrowLeft, Clock, ChefHat, Users } from "lucide-react";
+import { ArrowLeft, ChefHat, Clock, Users } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { RecipeProps } from "@/types/RecipeProps";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Footer } from "@/components/footer";
 
 export default function RecipePage() {
   const params = useParams();
@@ -17,7 +16,7 @@ export default function RecipePage() {
   const [recipe, setRecipe] = useState<RecipeProps>();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/recipes/${recipeId}`)
+    fetch(`http://localhost:5001/api/recipes/${recipeId}`)
       .then((response) => response.json())
       .then((data) => {
         setRecipe(data);

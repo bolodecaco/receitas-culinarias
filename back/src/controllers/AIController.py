@@ -10,7 +10,18 @@ ai_service = AIService()
 @app.route('/api/recipes/', methods=['GET'])
 def list_recipes():
     try:
+        category = request.args.get('category')
         recipes = ai_service.list_recipes()
+        if category and category != 'all':
+            category_map = {
+                "breakfast": ["breakfast", "café da manhã", "cafe da manha"],
+                "lunch": ["lunch", "almoço", "almoco"],
+                "dinner": ["dinner", "jantar"],
+                "desserts": ["desserts", "sobremesas", "sobremesa"],
+                "vegetarian": ["vegetarian", "vegetariana", "vegetariano", "vegetarianas"]
+            }
+            valid = category_map.get(category.lower(), [category.lower()])
+            recipes = [r for r in recipes if r.get('category', '').lower() in valid]
         return jsonify(recipes), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -48,4 +59,3 @@ def generate_recipe():
         return jsonify(recipe), 200
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
-    

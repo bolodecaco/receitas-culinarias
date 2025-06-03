@@ -22,7 +22,8 @@ class AIFactory:
         "difficulty": "easy, medium, or difficult",
         "description": "additional description about the recipe",
         "servings": "amount of servings for example: 4 porções",
-        "preparation_method": [ "1st step of the recipe", "second step", "and so on" ]
+        "preparation_method": [ "1st step of the recipe", "second step", "and so on" ],
+        "category": "breakfast | lunch | dinner | desserts | vegetarian"
         }
     """
     

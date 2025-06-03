@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Send, BotMessageSquare, Loader2, X, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChatMessage } from "./chat-messages";
-import { Suggestion } from "./sugestion-questions";
 import {
   AIAssistantProps,
   MessageProps,
   MessageRole,
 } from "@/types/MessageProps";
+import { BotMessageSquare, Loader2, Send, Trash2, X } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { ChatMessage } from "./chat-messages";
+import { Suggestion } from "./sugestion-questions";
 
 export function AIAssistant({ className }: AIAssistantProps) {
   const [messages, setMessages] = useState<MessageProps[]>([
@@ -62,7 +62,7 @@ export function AIAssistant({ className }: AIAssistantProps) {
         prompt: messageContent,
       });
 
-      const response = await fetch("http://localhost:5000/api/recipes/ai/", {
+      const response = await fetch("http://localhost:5001/api/recipes/ai/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

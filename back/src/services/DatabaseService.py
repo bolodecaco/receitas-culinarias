@@ -22,9 +22,14 @@ class DatabaseService:
                     servings TEXT NOT NULL,
                     preparation_method TEXT NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    image TEXT DEFAULT NULL
+                    image TEXT DEFAULT NULL,
+                    category TEXT DEFAULT ''
                 )
             ''')
+            try:
+                cursor.execute('ALTER TABLE recipes ADD COLUMN category TEXT DEFAULT ""')
+            except sqlite3.OperationalError:
+                pass  
             conn.commit()
 
     def save_recipe(self, recipe):
@@ -33,8 +38,8 @@ class DatabaseService:
             cursor.execute('''
                 INSERT INTO recipes (
                     name, ingredients, duration, difficulty,
-                    description, servings, preparation_method
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                    description, servings, preparation_method, category
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 recipe['name'],
                 json.dumps(recipe['ingredients']),
@@ -42,7 +47,8 @@ class DatabaseService:
                 recipe['difficulty'],
                 recipe['description'],
                 recipe['servings'],
-                json.dumps(recipe['preparation_method']) 
+                json.dumps(recipe['preparation_method']),
+                recipe.get('category', '')
             ))
             conn.commit()
             return cursor.lastrowid
@@ -64,7 +70,8 @@ class DatabaseService:
                     'servings': row[6],
                     'preparation_method': json.loads(row[7]),
                     'created_at': row[8],
-                    'image': row[9] if row[9] else None
+                    'image': row[9] if row[9] else None,
+                    'category': row[10] if len(row) > 10 else ''
                 }
                 recipes.append(recipe)
             return recipes
@@ -85,7 +92,8 @@ class DatabaseService:
                     'servings': row[6],
                     'preparation_method': json.loads(row[7]),
                     'created_at': row[8],
-                    'image': row[9] if row[9] else None
+                    'image': row[9] if row[9] else None,
+                    'category': row[10] if len(row) > 10 else ''
                 }
             return None
         
