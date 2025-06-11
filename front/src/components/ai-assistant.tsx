@@ -120,9 +120,9 @@ export function AIAssistant({ className }: AIAssistantProps) {
 
   const getSuggestions = () => {
     return [
-      "Como fazer um pudim de leite?",
-      "Qual a receita de bolo de cenoura?",
-      "Quais a receita para uma lasanha de frango?",
+      "Como fazer um pudim?",
+      "Qual a receita de bolo de chocolate?",
+      "Qual a receita para uma lasanha?",
     ];
   };
 
