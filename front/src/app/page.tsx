@@ -15,6 +15,11 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [filters, setFilters] = useState<FiltersProps>({ category: "all" });
   const [recipes, setRecipes] = useState<RecipeProps[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const removeAccents = (str: string) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  };
 
   useEffect(() => {
     const url =
@@ -31,7 +36,16 @@ export default function Home() {
       });
   }, [filters]);
 
-  const filteredRecipes = recipes;
+  const filteredRecipes = recipes.filter((recipe) => {
+    const searchTermLower = removeAccents(searchTerm.toLowerCase());
+    const recipeName = removeAccents(recipe.name.toLowerCase());
+    const recipeDescription = removeAccents(recipe.description.toLowerCase());
+
+    return (
+      recipeName.includes(searchTermLower) ||
+      recipeDescription.includes(searchTermLower)
+    );
+  });
 
   return (
     <div className="min-h-screen bg-[#fffaf5]">
@@ -50,6 +64,8 @@ export default function Home() {
             <Input
               placeholder="Buscar receitas..."
               className="pl-10 bg-white border-amber-200 focus-visible:ring-amber-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
