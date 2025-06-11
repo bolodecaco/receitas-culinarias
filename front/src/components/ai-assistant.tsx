@@ -20,7 +20,7 @@ export function AIAssistant({ className }: AIAssistantProps) {
     {
       id: "default",
       role: "assistant" as MessageRole,
-      content: "Como posso ajudar você com seu exame?",
+      content: "Como posso ajudar você com suas receitas?",
       timestamp: new Date().toISOString(),
     },
   ]);
