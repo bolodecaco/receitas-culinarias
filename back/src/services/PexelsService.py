@@ -23,24 +23,20 @@ class PexelsService(ImageServiceInterface):
         """
         score = 0.0
         
-        # Prefere imagens maiores
         width = photo.get('width', 0)
         height = photo.get('height', 0)
         if width > 0 and height > 0:
-            score += (width * height) / 1000000  # Normaliza para megapixels
+            score += (width * height) / 1000000 
         
-        # Prefere imagens com boa qualidade
         if photo.get('avg_color'):
-            # Verifica se a cor média não é muito escura ou muito clara
             r, g, b = [int(photo['avg_color'][i:i+2], 16) for i in (1, 3, 5)]
             brightness = (r + g + b) / 3
-            if 30 <= brightness <= 225:  # Evita imagens muito escuras ou claras
+            if 30 <= brightness <= 225: 
                 score += 1
         
-        # Prefere imagens com boa proporção
         if width > 0 and height > 0:
             ratio = width / height
-            if 1.5 <= ratio <= 2.5:  # Prefere proporções mais comuns para fotos de comida
+            if 1.5 <= ratio <= 2.5:  
                 score += 1
         
         return score
@@ -52,7 +48,7 @@ class PexelsService(ImageServiceInterface):
         Retorna a URL da melhor imagem encontrada ou None se nenhuma for encontrada.
         """
         try:
-            # Simplifica a query para usar apenas palavras-chave curtas
+            
             words = query.lower().split()
             filtered_words = [w for w in words if len(w) > 3 and w not in ['com', 'para', 'como', 'fazer', 'receita', 'prato', 'pratos']]
             search_query = ' '.join(filtered_words[:2])
@@ -77,11 +73,9 @@ class PexelsService(ImageServiceInterface):
             
             print(f"[Pexels] Encontradas {len(data['photos'])} imagens")
             
-            # Pontua e ordena as imagens
             scored_photos = [(photo, self._score_image(photo)) for photo in data["photos"]]
             scored_photos.sort(key=lambda x: x[1], reverse=True)
             
-            # Mostra detalhes da melhor imagem
             best_photo = scored_photos[0][0]
             print(f"[Pexels] Melhor imagem escolhida:")
             print(f"  - URL: {best_photo['src']['large']}")

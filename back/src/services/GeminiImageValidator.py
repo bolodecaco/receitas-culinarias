@@ -53,10 +53,8 @@ class GeminiImageValidator(ImageValidationInterface):
             print(f"\n[GeminiValidator] Validando imagem para receita: {recipe_name}")
             print(f"[GeminiValidator] URL da imagem: {image_url}")
             
-            # Baixa a imagem
             image_data = self._download_image(image_url)
             
-            # Prepara o prompt com o contexto da receita
             prompt = f"""
             {self._base_prompt}
             
@@ -66,7 +64,6 @@ class GeminiImageValidator(ImageValidationInterface):
             Analise a imagem e determine se ela é adequada para esta receita.
             """
             
-            # Faz a requisição para o Gemini Vision com o formato correto
             response = self._model.generate_content([
                 {
                     "role": "user",
@@ -82,14 +79,11 @@ class GeminiImageValidator(ImageValidationInterface):
                 }
             ])
             
-            # Extrai a resposta JSON
             import json
             import re
             
-            # Procura por um bloco JSON na resposta
             json_match = re.search(r'```json\n(.*?)\n```', response.text, re.DOTALL)
             if not json_match:
-                # Se não encontrar um bloco JSON, tenta parsear a resposta inteira
                 try:
                     result = json.loads(response.text)
                 except:

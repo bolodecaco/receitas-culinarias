@@ -20,20 +20,17 @@ class PixabayService(ImageServiceInterface):
         """
         score = 0.0
         
-        # Prefere imagens maiores
         width = hit.get('imageWidth', 0)
         height = hit.get('imageHeight', 0)
         if width > 0 and height > 0:
-            score += (width * height) / 1000000  # Normaliza para megapixels
+            score += (width * height) / 1000000  
         
-        # Prefere imagens com boa qualidade
         if hit.get('likes', 0) > 0:
-            score += min(hit['likes'] / 100, 5)  # Máximo de 5 pontos por likes
+            score += min(hit['likes'] / 100, 5) 
         
-        # Prefere imagens com boa proporção
         if width > 0 and height > 0:
             ratio = width / height
-            if 1.5 <= ratio <= 2.5:  # Prefere proporções mais comuns para fotos de comida
+            if 1.5 <= ratio <= 2.5: 
                 score += 1
         
         return score
@@ -45,7 +42,6 @@ class PixabayService(ImageServiceInterface):
         Retorna a URL da melhor imagem encontrada ou None se nenhuma for encontrada.
         """
         try:
-            # Simplifica a query para usar apenas palavras-chave curtas
             words = query.lower().split()
             filtered_words = [w for w in words if len(w) > 3 and w not in ['com', 'para', 'como', 'fazer', 'receita', 'prato', 'pratos']]
             search_query = ' '.join(filtered_words[:2])
@@ -58,9 +54,9 @@ class PixabayService(ImageServiceInterface):
                 "q": search_query,
                 "per_page": 5,
                 "orientation": "horizontal",
-                "category": "food",  # Foca em imagens de comida
+                "category": "food", 
                 "safesearch": "true",
-                "order": "popular"  # Prefere imagens populares
+                "order": "popular" 
             }
             
             response = requests.get(self.base_url, params=params)
@@ -73,11 +69,9 @@ class PixabayService(ImageServiceInterface):
             
             print(f"[Pixabay] Encontradas {len(data['hits'])} imagens")
             
-            # Pontua e ordena as imagens
             scored_photos = [(hit, self._score_image(hit)) for hit in data["hits"]]
             scored_photos.sort(key=lambda x: x[1], reverse=True)
             
-            # Mostra detalhes da melhor imagem
             best_photo = scored_photos[0][0]
             print(f"[Pixabay] Melhor imagem escolhida:")
             print(f"  - URL: {best_photo['largeImageURL']}")
