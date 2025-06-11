@@ -15,6 +15,7 @@ class DatabaseService:
                 CREATE TABLE IF NOT EXISTS recipes (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
+                    name_en TEXT NOT NULL,
                     ingredients TEXT NOT NULL,
                     duration TEXT NOT NULL,
                     difficulty TEXT NOT NULL,
@@ -27,9 +28,13 @@ class DatabaseService:
                 )
             ''')
             try:
+                cursor.execute('ALTER TABLE recipes ADD COLUMN name_en TEXT DEFAULT ""')
+            except sqlite3.OperationalError:
+                pass
+            try:
                 cursor.execute('ALTER TABLE recipes ADD COLUMN category TEXT DEFAULT ""')
             except sqlite3.OperationalError:
-                pass  
+                pass
             conn.commit()
 
     def save_recipe(self, recipe):
@@ -37,18 +42,20 @@ class DatabaseService:
             cursor = conn.cursor()
             cursor.execute('''
                 INSERT INTO recipes (
-                    name, ingredients, duration, difficulty,
-                    description, servings, preparation_method, category
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    name, name_en, ingredients, duration, difficulty,
+                    description, servings, preparation_method, category, image
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 recipe['name'],
+                recipe['name_en'],
                 json.dumps(recipe['ingredients']),
                 recipe['duration'],
                 recipe['difficulty'],
                 recipe['description'],
                 recipe['servings'],
                 json.dumps(recipe['preparation_method']),
-                recipe.get('category', '')
+                recipe.get('category', ''),
+                recipe.get('image', None)
             ))
             conn.commit()
             return cursor.lastrowid
@@ -63,15 +70,16 @@ class DatabaseService:
                 recipe = {
                     'id': row[0],
                     'name': row[1],
-                    'ingredients': json.loads(row[2]),
-                    'duration': row[3],
-                    'difficulty': row[4],
-                    'description': row[5],
-                    'servings': row[6],
-                    'preparation_method': json.loads(row[7]),
-                    'created_at': row[8],
-                    'image': row[9] if row[9] else None,
-                    'category': row[10] if len(row) > 10 else ''
+                    'name_en': row[2],
+                    'ingredients': json.loads(row[3]),
+                    'duration': row[4],
+                    'difficulty': row[5],
+                    'description': row[6],
+                    'servings': row[7],
+                    'preparation_method': json.loads(row[8]),
+                    'created_at': row[9],
+                    'image': row[10] if row[10] else None,
+                    'category': row[11] if len(row) > 11 else ''
                 }
                 recipes.append(recipe)
             return recipes
@@ -85,15 +93,16 @@ class DatabaseService:
                 return {
                     'id': row[0],
                     'name': row[1],
-                    'ingredients': json.loads(row[2]),
-                    'duration': row[3],
-                    'difficulty': row[4],
-                    'description': row[5],
-                    'servings': row[6],
-                    'preparation_method': json.loads(row[7]),
-                    'created_at': row[8],
-                    'image': row[9] if row[9] else None,
-                    'category': row[10] if len(row) > 10 else ''
+                    'name_en': row[2],
+                    'ingredients': json.loads(row[3]),
+                    'duration': row[4],
+                    'difficulty': row[5],
+                    'description': row[6],
+                    'servings': row[7],
+                    'preparation_method': json.loads(row[8]),
+                    'created_at': row[9],
+                    'image': row[10] if row[10] else None,
+                    'category': row[11] if len(row) > 11 else ''
                 }
             return None
         

@@ -6,8 +6,9 @@ export interface RecipeProps {
   duration: string;
   ingredients: string[];
   name: string;
+  name_en: string;
   preparation_method: string[];
   servings: string;
-  image: string;
+  image: string | null;
   category?: string;
 }
